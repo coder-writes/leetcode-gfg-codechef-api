@@ -16,7 +16,7 @@ import createRateLimiter from './middleware/rateLimiter.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+const domain = process.env.YOUR_DOMAIN || 'https://risshi.me';
 // Security middleware
 app.use(helmet({
   crossOriginEmbedderPolicy: false,
@@ -25,12 +25,8 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com'] 
-    : ['http://localhost:3000', 'http://localhost:3001',
-        'http://localhost:5174'
-    ],
-  credentials: true
+    origin: '*',
+    credentials: false
 }));
 
 // Compression middleware
