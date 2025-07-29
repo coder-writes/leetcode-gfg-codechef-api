@@ -90,6 +90,7 @@ export const getUserContest = async (req, res) => {
 export const getUserContestHistory = async (req, res) => {
   try {
     const username = validateUsername(req.params.username);
+    const attendedOnly = req.params.attendedOnly === 'true' || req.query.attendedOnly === 'true';
     
     const data = await client.graphqlQuery(GRAPHQL_QUERIES.USER_CONTEST_INFO, { username });
     
@@ -97,7 +98,25 @@ export const getUserContestHistory = async (req, res) => {
       return handleError(res, new Error('Contest history not found for user'), 404);
     }
     
-    handleResponse(res, data.userContestRankingHistory, 'User contest history retrieved successfully');
+    let contestHistory = data.userContestRankingHistory;
+    
+    // Filter to only attended contests if requested
+    if (attendedOnly) {
+      contestHistory = contestHistory.filter(contest => contest.attended === true);
+    }
+    
+    // Sort by most recent first (descending order)
+    const sortedContestHistory = contestHistory.sort((a, b) => {
+      const timeA = new Date(a.contest.startTime * 1000).getTime();
+      const timeB = new Date(b.contest.startTime * 1000).getTime();
+      return timeB - timeA; // Descending order (most recent first)
+    });
+    
+    const message = attendedOnly 
+      ? 'User attended contest history retrieved successfully'
+      : 'User contest history retrieved successfully';
+    
+    handleResponse(res, sortedContestHistory, message);
   } catch (error) {
     handleError(res, error);
   }
@@ -276,6 +295,7 @@ export const getUserContestRanking = async (req, res) => {
 export const getAllUserData = async (req, res) => {
   try {
     const username = validateUsername(req.params.username);
+    const attendedOnly = req.params.attendedOnly === 'true' || req.query.attendedOnly === 'true';
     
     // Fetch all user data in parallel for better performance
     const [
@@ -331,7 +351,21 @@ export const getAllUserData = async (req, res) => {
       },
       contestInfo: {
         ranking: contestData.status === 'fulfilled' ? contestData.value?.userContestRanking : null,
-        history: contestData.status === 'fulfilled' ? contestData.value?.userContestRankingHistory || [] : []
+        history: contestData.status === 'fulfilled' && contestData.value?.userContestRankingHistory 
+          ? (() => {
+              let history = contestData.value.userContestRankingHistory;
+              // Filter to only attended contests if requested
+              if (attendedOnly) {
+                history = history.filter(contest => contest.attended === true);
+              }
+              // Sort by most recent first
+              return history.sort((a, b) => {
+                const timeA = new Date(a.contest.startTime * 1000).getTime();
+                const timeB = new Date(b.contest.startTime * 1000).getTime();
+                return timeB - timeA; // Descending order (most recent first)
+              });
+            })()
+          : []
       },
       recentSubmissions: recentSubmissions.status === 'fulfilled' ? recentSubmissions.value?.recentSubmissionList || [] : [],
       calendar: calendarData.status === 'fulfilled' ? calendarData.value?.matchedUser?.userCalendar : null,
