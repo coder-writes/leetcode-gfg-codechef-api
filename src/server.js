@@ -141,39 +141,39 @@ app.use('*', (req, res) => {
 
 // Error handling middleware (must be last)
 app.use(errorHandler);
-
+const port = PORT;
+app.listen(port, () => {
+  console.log(`🚀 LeetCode, CodeChef & GeeksforGeeks API Server is running on port ${port}`);
+  console.log(`📚 API Documentation: http://localhost:${port}/`);
+  console.log(`🔍 Health Check: http://localhost:${port}/health`);
+  console.log(`🎯 Environment: ${process.env.NODE_ENV || 'development'}`);
+});
 // Start server
-const startServer = (port) => {
-  const server = app.listen(port, () => {
-    console.log(`🚀 LeetCode, CodeChef & GeeksforGeeks API Server is running on port ${port}`);
-    console.log(`📚 API Documentation: http://localhost:${port}/`);
-    console.log(`🔍 Health Check: http://localhost:${port}/health`);
-    console.log(`🎯 Environment: ${process.env.NODE_ENV || 'development'}`);
-  });
+// const startServer = (port) => {
 
-  server.on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-      console.log(`Port ${port} is busy, trying port ${port + 1}...`);
-      startServer(port + 1);
-    } else {
-      console.error('Server error:', err);
-    }
-  });
+//   server.on('error', (err) => {
+//     if (err.code === 'EADDRINUSE') {
+//       console.log(`Port ${port} is busy, trying port ${port + 1}...`);
+//       startServer(port + 1);
+//     } else {
+//       console.error('Server error:', err);
+//     }
+//   });
 
-  return server;
-};
+//   return server;
+// };
 
-startServer(PORT);
+// startServer(PORT);
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
-  process.exit(0);
-});
+// // Graceful shutdown
+// process.on('SIGTERM', () => {
+//   console.log('SIGTERM received, shutting down gracefully');
+//   process.exit(0);
+// });
 
-process.on('SIGINT', () => {
-  console.log('SIGINT received, shutting down gracefully');
-  process.exit(0);
-});
+// process.on('SIGINT', () => {
+//   console.log('SIGINT received, shutting down gracefully');
+//   process.exit(0);
+// });
 
 export default app;

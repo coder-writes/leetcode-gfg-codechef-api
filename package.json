@@ -1,11 +1,11 @@
 {
   "name": "leetcode-api",
   "version": "1.0.0",
-  "main": "src/app.js",
+  "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
+    "start": "node src/server.js",
+    "server": "nodemon src/server.js",
     "demo": "node demo.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
