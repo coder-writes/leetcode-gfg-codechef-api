@@ -4,15 +4,15 @@ import helmet from 'helmet';
 import compression from 'compression';
 
 // Import routes
-import userRoutes from './routes/userRoutes.js';
-import problemRoutes from './routes/problemRoutes.js';
-import discussRoutes from './routes/discussRoutes.js';
-import codechefRoutes from './routes/codechefRoutes.js';
-import geeksforgeeksRoutes from './routes/geeksforgeeksRoutes.js';
+import userRoutes from './src/routes/userRoutes.js';
+import problemRoutes from './src/routes/problemRoutes.js';
+import discussRoutes from './src/routes/discussRoutes.js';
+import codechefRoutes from './src/routes/codechefRoutes.js';
+import geeksforgeeksRoutes from './src/routes/geeksforgeeksRoutes.js';
 
 // Import middleware
-import errorHandler from './middleware/errorHandler.js';
-import createRateLimiter from './middleware/rateLimiter.js';
+import errorHandler from './src/middleware/errorHandler.js';
+import createRateLimiter from './src/middleware/rateLimiter.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
