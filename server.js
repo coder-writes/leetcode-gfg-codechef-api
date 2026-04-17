@@ -41,7 +41,9 @@ app.use(createRateLimiter(15 * 600 * 1000, 10000)); // 1000 requests per 15 minu
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  console.log("API HIT");
+ console.log(
+    `[HEALTH] hit method=${req.method} path=${req.originalUrl} ip=${req.ip} at=${new Date().toISOString()}`,
+  );
   res.json({
     success: true,
     message: 'LeetCode, CodeChef & GeeksforGeeks API is running',
